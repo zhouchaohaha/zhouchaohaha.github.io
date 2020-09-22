@@ -19,9 +19,9 @@ Azure RTOS ThreadX是Microsoft的高级工业级实时操作系统（RTOS），�
 ### 内存占用
 Azure RTOS ThreadX需要非常小的2KB指令区和1KB RAM，以实现最小的占用空间。这主要是由于其非分层的picokernel™体系结构和自动缩放。自动缩放意味着在链接时仅将应用程序使用的服务（和支持的基础结构）包括在最终映像中。<br>
 以下是一些典型的Azure RTOS ThreadX大小特征：<br>
-Azure RTOS ThreadX服务|典型大小(以字节为单位)
+Azure RTOS ThreadX服务|典型大小（以字节为单位）
 :---:|:---:
-核心服务(必填)|2,000
+核心服务（必填）|2,000
 队列服务|900
 活动标志服务|900
 信号量服务|450
@@ -36,7 +36,7 @@ Azure RTOS ThreadX在大多数流行的处理器上实现了亚微秒的上下�
 * Picokernel™设计：服务不会彼此分层，从而消除了不必要的函数调用开销。
 * \*优化的中断处理：除非需要先占，否则仅在ISR进入/退出时才保存/恢复暂存寄存器。
 * 优化的API处理：
-  Azure RTOS ThreadX服务|服务时间(以微秒为单位)
+  Azure RTOS ThreadX服务|服务时间（以微秒为单位）
   :---:|:---:
   线程挂起|0.6
   线程恢复|0.6
@@ -69,3 +69,33 @@ Azure RTOS ThreadX在大多数流行的处理器上实现了亚微秒的上下�
 * Tl：C5xxx，C6xxx，Stellaris，Sitara，Tiva-C
 * 波形计算：MIPS32 4K，24K，34K，1004K，MIPS64 5K，microAptiv，interAptiv，proAptiv，M级
 * Xilinx：MicroBlaze，PowerPC 405，ZYNQ，ZYNQ UltraSCALE
+***
+## ThreadX的安装和使用
+### 主机注意事项
+嵌入式软件通常在Windows或Linux（Unix）主机上开发。在编译，链接并放置在主机上的应用程序之后，将其下载到目标硬件以执行。<br>
+通常，目标下载是从开发工具调试器中完成的。下载后，调试器负责提供目标执行控制（执行，停止，断点等）以及对内存和处理器寄存器的访问。<br>
+大多数开发工具调试器通过诸如JTAG（IEEE 1149.1）和后台调试模式（BDM）的片上调试（OCD）连接与目标硬件进行通信。调试器还通过在线仿真（ICE）连接与目标硬件进行通信。OCD和ICE连接都提供了可靠的解决方案，并且对目标驻留软件的入侵最少。<br>
+至于主机上使用的资源，ThreadX的源代码以ASCII格式提供，并且在主机计算机的硬盘上大约需要1 MB的空间。<br>
+### 目标机注意事项
+ThreadX在目标上需要2 KB到20 KB的只读内存（ROM）。ThreadX系统堆栈和其他全局数据结构还需要目标内存的另外1至2 KB。<br>
+为了使与计时器相关的功能（如服务调用超时，时间分片和应用程序计时器）正常运行，底层目标硬件必须提供周期性的中断源。如果处理器具有此功能，则ThreadX将利用它。否则，如果目标处理器没有能力生成定期中断，则用户的硬件必须提供该中断。计时器中断的设置和配置通常位于ThreadX发行版的 tx_initialize_low_level汇编文件中。<br>
+### 安装ThreadX
+通过将GitHub存储库克隆到本地计算机来安装ThreadX。以下是在您的PC上创建ThreadX存储库的克隆的典型语法：<br>
+```
+git clone https://github.com/azure-rtos/threadx
+```
+以下是存储库中几个重要文件的列表：<br>
+文档名称|描述
+:---:|:---:
+tx_api.h|C头文件，包含所有系统等式，数据结构和服务原型
+tx_port.h|C头文件，包含所有开发工具和特定于目标的数据定义和结构
+demo_threadx.c|包含一个小型演示应用程序的C文件
+tx.a（或tx.lib）|随标准包一起分发的ThreadX C库的二进制版本
+### 使用ThreadX
+使用ThreadX很容易。基本上，应用程序代码在编译期间必须包含 tx_api.h并与ThreadX运行时库tx.a（或tx.lib）链接。<br>
+构建ThreadX应用程序需要四个步骤：<br>
+1. 在使用ThreadX服务或数据结构的所有应用程序文件中包括tx_api.h文件。
+2. 创建标准的C main函数。该函数最终必须调用tx_kernel_enter来启动ThreadX。在进入内核之前，可以添加不涉及ThreadX的特定于应用程序的初始化。
+  > 注：ThreadX入口函数 tx_kernel_enter不返回。因此，请确保不要在其后放置任何处理或函数调用。
+3. 创建tx_application_define函数。这是创建初始系统资源的地方。系统资源的示例包括线程，队列，内存池，事件标志组，互斥锁和信号灯。
+4. 编译应用程序源，并与ThreadX运行时库 tx.lib链接。生成的图像可以下载到目标并执行！

@@ -47,3 +47,25 @@ Azure RTOS ThreadX在大多数流行的处理器上实现了亚微秒的上下�
   上下文切换|0.4
   中断响应|0.0-0.6
 > 注：性能数据基于在200MHz下运行的典型处理器。
+### 支持最受欢迎的架构
+* Azure RTOS ThreadX在开箱即用，经过全面测试和完全支持的最受欢迎的32/64位微处理器上运行，包括以下各项：<br>
+* ADI公司：SHARC，Blackfin，CM4xx
+* 安第斯山脉核心：RISC-V
+* Ambiqmicro：Apollo MCU
+* ARM：ARM7，ARM9，ARM11，Cortex-M0 / M3 / M4 / M7 / A15 / A5 / A7 / A8 / A9 / A5x 64-bi / A7x 64位/ R4 / R5，TrustZone ARMv8-M
+* 踏频：Xtensa，钻石
+* CEVA：PSoC，PSoC 4，PSoC 5，PSoC 6，FM0 +，FM3，MF4，WICED WiFi
+* 赛普拉斯：RISC-V
+* EnSilica：eSi-RISC
+* 英飞凌：XMC1000，XMC4000，TriCore
+* 英特尔＆英特尔FPGA：x36 /奔腾，XScale，NIOS II，Cyclone，Arria 10
+* Microchip：AVR32，ARM7，ARM9，Cortex-M3 / M4 / M7，SAM3 / 4/7/9 / A / C / D / E / G / L / SV，PIC24 / PIC32
+* Microsemi：RISC-V
+* 恩智浦：LPC，ARM7，ARM9，PowerPC，68K，i.MX，ColdFire，Kinetis Cortex-M3 / M4
+* 瑞萨：SH，HS，V850，RX，RZ，Synergy
+* Silicon Labs：EFM32
+* Synopsys：ARC 600、700，ARC EM，ARC HS
+* ST：STM32，ARM7，ARM9，Cortex-M3 / M4 / M7
+* Tl：C5xxx，C6xxx，Stellaris，Sitara，Tiva-C
+* 波形计算：MIPS32 4K，24K，34K，1004K，MIPS64 5K，microAptiv，interAptiv，proAptiv，M级
+* Xilinx：MicroBlaze，PowerPC 405，ZYNQ，ZYNQ UltraSCALE
